@@ -6,6 +6,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -27,7 +28,7 @@ public class FileReader {
             }
         }
         catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileReadException("Error reading file", e);
         }
 
         HashMap <String, String> dataMap = new HashMap<>();
@@ -37,9 +38,10 @@ public class FileReader {
 
         for (String pair : lines) {
             String[] keyValue = pair.split(": ");
-            dataMap.put(keyValue[0].trim(), keyValue[1].trim());
+            if (keyValue.length == 2) {
+            dataMap.put(keyValue[0].trim(), keyValue[1].trim());}
         }
-        for (HashMap.Entry <String, String> entry : dataMap.entrySet()) {
+        for (Map.Entry <String, String> entry : dataMap.entrySet()) {
             if (Objects.equals(entry.getKey(), "Name")) first.setName(entry.getValue());
             if (Objects.equals(entry.getKey(), "Age")) first.setAge(Integer.parseInt(entry.getValue()));
             if (Objects.equals(entry.getKey(), "Email")) first.setEmail(entry.getValue());
